@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace api.DTOs.Stock
 {
-    public class StockDTO
+    public class GetStockDTO
     {
         public int Id { get; set; }
         public string Symbol { get; set; } = string.Empty;
