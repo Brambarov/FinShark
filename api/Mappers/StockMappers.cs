@@ -36,5 +36,18 @@ namespace api.Mappers
                 MarketCap = DTO.MarketCap
             };
         }
+
+        public static Stock ToModel(this PutStockDTO DTO)
+        {
+            return new Stock
+            {
+                Symbol = DTO.Symbol,
+                CompanyName = DTO.CompanyName,
+                Purchase = DTO.Purchase,
+                LastDiv = DTO.LastDiv,
+                Industry = DTO.Industry,
+                MarketCap = DTO.MarketCap
+            };
+        }
     }
 }

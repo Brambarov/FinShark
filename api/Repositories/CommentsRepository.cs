@@ -38,26 +38,36 @@ namespace api.Repositories
             return model;
         }
 
-        public async Task<Comment?> UpdateAsync(int id, PutCommentDTO DTO)
+        public async Task<Comment?> UpdateAsync(int id, Comment updatedModel)
         {
-            var model = await _context.Comments.FirstOrDefaultAsync(x => x.Id == id);
+            var existingModel = await _context.Comments.FirstOrDefaultAsync(x => x.Id == id);
 
-            if (model == null)
+            if (existingModel == null)
             {
                 return null;
             }
 
-            model.Title = DTO.Title;
-            model.Content = DTO.Content;
+            existingModel.Title = updatedModel.Title;
+            existingModel.Content = updatedModel.Content;
 
             await _context.SaveChangesAsync();
 
-            return model;
+            return existingModel;
         }
 
         public async Task<IModel?> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var model = await _context.Comments.FirstOrDefaultAsync(c => c.Id == id);
+
+            if(model == null)
+            {
+                return null;
+            }
+
+            _context.Comments.Remove(model);
+            await _context.SaveChangesAsync();
+
+            return model;
         }
 
         public async Task<bool> ExistsAsync(int id)

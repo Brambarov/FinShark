@@ -54,7 +54,7 @@ namespace api.Controllers
                 return BadRequest("Stock does not exist!");
             }
 
-            var model = DTO.FromPostDTO(stockId);
+            var model = DTO.ToModel(stockId);
 
             await _commentsRepository.CreateAsync(model);
 
@@ -64,7 +64,7 @@ namespace api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] PutCommentDTO DTO)
         {
-            var model = await _commentsRepository.UpdateAsync(id, DTO);
+            var model = await _commentsRepository.UpdateAsync(id, DTO.ToModel());
 
             if(model == null)
             {
@@ -72,6 +72,19 @@ namespace api.Controllers
             }
 
             return Ok(model.ToGetDTO());
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete([FromRoute] int id)
+        {
+            var model = await _commentsRepository.DeleteAsync(id) as Comment;
+
+            if(model == null)
+            {
+                return NotFound("Comment does not exist!");
+            }
+
+            return NoContent();
         }
     }
 }

@@ -21,13 +21,22 @@ namespace api.Mappers
             };
         }
 
-        public static Comment FromPostDTO(this PostCommentDTO DTO, int stockId)
+        public static Comment ToModel(this PostCommentDTO DTO, int stockId)
         {
             return new Comment
             {
                 Title = DTO.Title,
                 Content = DTO.Content,
                 StockId = stockId
+            };
+        }
+
+        public static Comment ToModel(this PutCommentDTO DTO)
+        {
+            return new Comment
+            {
+                Title = DTO.Title,
+                Content = DTO.Content
             };
         }
     }

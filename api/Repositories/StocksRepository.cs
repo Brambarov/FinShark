@@ -39,25 +39,25 @@ namespace api.Repositories
             return model;
         }
 
-        public async Task<Stock?> UpdateAsync(int id, PutStockDTO DTO)
+        public async Task<Stock?> UpdateAsync(int id, Stock updatedModel)
         {
-            var model = await _context.Stocks.FirstOrDefaultAsync(x => x.Id == id);
+            var existingModel = await _context.Stocks.FirstOrDefaultAsync(x => x.Id == id);
 
-            if (model == null)
+            if (existingModel == null)
             {
                 return null;
             }
 
-            model.Symbol = DTO.Symbol;
-            model.CompanyName = DTO.CompanyName;
-            model.Purchase = DTO.Purchase;
-            model.LastDiv = DTO.LastDiv;
-            model.Industry = DTO.Industry;
-            model.MarketCap = DTO.MarketCap;
+            existingModel.Symbol = updatedModel.Symbol;
+            existingModel.CompanyName = updatedModel.CompanyName;
+            existingModel.Purchase = updatedModel.Purchase;
+            existingModel.LastDiv = updatedModel.LastDiv;
+            existingModel.Industry = updatedModel.Industry;
+            existingModel.MarketCap = updatedModel.MarketCap;
 
             await _context.SaveChangesAsync();
 
-            return model;
+            return existingModel;
         }
 
         public async Task<IModel?> DeleteAsync(int id)
