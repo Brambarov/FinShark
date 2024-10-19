@@ -2,11 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using api.Repositories.Contracts;
 using api.Data;
 using api.DTOs.Stock;
-using api.Interfaces;
 using api.Models;
+using api.Models.Contracts;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace api.Repositories
 {
@@ -19,58 +21,63 @@ namespace api.Repositories
             _context = context;
         }
 
-        public async Task<List<Stock>> GetAllAsync()
+        public async Task<List<IModel>> GetAllAsync()
         {
-            return await _context.Stocks.ToListAsync();
+            return new List<IModel>(await _context.Stocks.Include(s => s.Comments).ToListAsync());
         }
 
-        public async Task<Stock?> GetByIdAsync(int id)
+        public async Task<IModel?> GetByIdAsync(int id)
         {
-            return await _context.Stocks.FindAsync(id);
+            return await _context.Stocks.Include(s => s.Comments).FirstOrDefaultAsync(s => s.Id == id);
         }
 
-        public async Task<Stock> CreateAsync(Stock stockModel)
+        public async Task<Stock> CreateAsync(Stock model)
         {
-            await _context.Stocks.AddAsync(stockModel);
+            await _context.Stocks.AddAsync(model);
             await _context.SaveChangesAsync();
 
-            return stockModel;
+            return model;
         }
 
-        public async Task<Stock?> UpdateAsync(int id, PutStockDTO stockDTO)
+        public async Task<Stock?> UpdateAsync(int id, PutStockDTO DTO)
         {
-            var stockModel = await _context.Stocks.FirstOrDefaultAsync(x => x.Id == id);
+            var model = await _context.Stocks.FirstOrDefaultAsync(x => x.Id == id);
 
-            if (stockModel == null)
+            if (model == null)
             {
                 return null;
             }
 
-            stockModel.Symbol = stockDTO.Symbol;
-            stockModel.CompanyName = stockDTO.CompanyName;
-            stockModel.Purchase = stockDTO.Purchase;
-            stockModel.LastDiv = stockDTO.LastDiv;
-            stockModel.Industry = stockDTO.Industry;
-            stockModel.MarketCap = stockDTO.MarketCap;
+            model.Symbol = DTO.Symbol;
+            model.CompanyName = DTO.CompanyName;
+            model.Purchase = DTO.Purchase;
+            model.LastDiv = DTO.LastDiv;
+            model.Industry = DTO.Industry;
+            model.MarketCap = DTO.MarketCap;
 
             await _context.SaveChangesAsync();
 
-            return stockModel;
+            return model;
         }
 
-        public async Task<Stock?> DeleteAsync(int id)
+        public async Task<IModel?> DeleteAsync(int id)
         {
-            var stockModel = await _context.Stocks.FirstOrDefaultAsync(x => x.Id == id);
+            var model = await _context.Stocks.FirstOrDefaultAsync(x => x.Id == id);
 
-            if (stockModel == null)
+            if (model == null)
             {
                 return null;
             }
 
-            _context.Stocks.Remove(stockModel);
+            _context.Stocks.Remove(model);
             await _context.SaveChangesAsync();
 
-            return stockModel;
+            return model;
+        }
+
+        public async Task<bool> ExistsAsync(int id)
+        {
+            return await _context.Stocks.AnyAsync(s => s.Id == id);
         }
     }
 }

@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using api.Models.Contracts;
 
 namespace api.Models
 {
-    public class Stock
+    public class Stock : IModel
     {
         public int Id { get; set; }
         public string Symbol { get; set; } = string.Empty;

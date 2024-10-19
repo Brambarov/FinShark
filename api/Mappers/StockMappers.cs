@@ -9,30 +9,31 @@ namespace api.Mappers
 {
     public static class StockMappers
     {
-        public static GetStockDTO ToGetStockDTO(this Stock stockModel)
+        public static GetStockDTO ToGetDTO(this Stock model)
         {
             return new GetStockDTO
             {
-                Id = stockModel.Id,
-                Symbol = stockModel.Symbol,
-                CompanyName = stockModel.CompanyName,
-                Purchase = stockModel.Purchase,
-                LastDiv = stockModel.LastDiv,
-                Industry = stockModel.Industry,
-                MarketCap = stockModel.MarketCap
+                Id = model.Id,
+                Symbol = model.Symbol,
+                CompanyName = model.CompanyName,
+                Purchase = model.Purchase,
+                LastDiv = model.LastDiv,
+                Industry = model.Industry,
+                MarketCap = model.MarketCap,
+                Comments = model.Comments.Select(c => c.ToGetDTO()).ToList()
             };
         }
 
-        public static Stock ToStockFromPostStockDTO(this PostStockDTO stockDTO)
+        public static Stock FromPostDTO(this PostStockDTO DTO)
         {
             return new Stock
             {
-                Symbol = stockDTO.Symbol,
-                CompanyName = stockDTO.CompanyName,
-                Purchase = stockDTO.Purchase,
-                LastDiv = stockDTO.LastDiv,
-                Industry = stockDTO.Industry,
-                MarketCap = stockDTO.MarketCap
+                Symbol = DTO.Symbol,
+                CompanyName = DTO.CompanyName,
+                Purchase = DTO.Purchase,
+                LastDiv = DTO.LastDiv,
+                Industry = DTO.Industry,
+                MarketCap = DTO.MarketCap
             };
         }
     }
