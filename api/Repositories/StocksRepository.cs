@@ -1,15 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using api.Repositories.Contracts;
 using api.Data;
-using api.DTOs.Stock;
+using api.Helpers;
 using api.Models;
 using api.Models.Contracts;
+using api.Repositories.Contracts;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using api.Helpers;
 
 namespace api.Repositories
 {
@@ -26,24 +20,24 @@ namespace api.Repositories
         {
             var stocks = _context.Stocks.Include(s => s.Comments).AsQueryable();
 
-            if(!string.IsNullOrWhiteSpace(queryParameters?.Symbol))
+            if (!string.IsNullOrWhiteSpace(queryParameters?.Symbol))
             {
                 stocks = stocks.Where(s => s.Symbol.Contains(queryParameters.Symbol));
             }
 
-            if(!string.IsNullOrWhiteSpace(queryParameters?.CompanyName))
+            if (!string.IsNullOrWhiteSpace(queryParameters?.CompanyName))
             {
                 stocks = stocks.Where(s => s.CompanyName.Contains(queryParameters.CompanyName));
             }
 
-            if(!string.IsNullOrWhiteSpace(queryParameters?.SortBy))
+            if (!string.IsNullOrWhiteSpace(queryParameters?.SortBy))
             {
-                if(queryParameters.SortBy.Equals("symbol", StringComparison.OrdinalIgnoreCase))
+                if (queryParameters.SortBy.Equals("symbol", StringComparison.OrdinalIgnoreCase))
                 {
                     stocks = queryParameters.IsDescending ? stocks.OrderByDescending(s => s.Symbol) : stocks.OrderBy(s => s.Symbol);
                 }
             }
-            
+
             var skipNumber = (queryParameters.PageNumber - 1) * queryParameters.PageSize;
 
             return await stocks.Select(s => s as IModel).Skip(skipNumber).Take(queryParameters.PageSize).ToListAsync();

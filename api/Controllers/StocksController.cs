@@ -1,16 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
-using api.Repositories.Contracts;
-using api.Data;
 using api.DTOs.Stock;
+using api.Helpers;
 using api.Mappers;
 using api.Models;
+using api.Repositories.Contracts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using api.Helpers;
 
 namespace api.Controllers
 {
@@ -26,9 +20,10 @@ namespace api.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAll([FromQuery] QueryParameters queryParameters)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
@@ -43,14 +38,14 @@ namespace api.Controllers
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
             var model = await _stockRepository.GetByIdAsync(id) as Stock;
 
-            if(model == null)
+            if (model == null)
             {
                 return NotFound();
             }
@@ -61,7 +56,7 @@ namespace api.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] PostStockDTO stockDTO)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
@@ -76,14 +71,14 @@ namespace api.Controllers
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] PutStockDTO DTO)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
             var model = await _stockRepository.UpdateAsync(id, DTO.ToModel());
 
-            if(model == null)
+            if (model == null)
             {
                 return NotFound();
             }
@@ -94,14 +89,14 @@ namespace api.Controllers
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
             var model = await _stockRepository.DeleteAsync(id) as Stock;
 
-            if(model == null)
+            if (model == null)
             {
                 return NotFound();
             }

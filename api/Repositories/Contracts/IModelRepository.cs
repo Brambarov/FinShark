@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using api.DTOs.Stock;
 using api.Helpers;
-using api.Models;
 using api.Models.Contracts;
 
 namespace api.Repositories.Contracts

@@ -1,14 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using api.Data;
-using api.DTOs.Comment;
-using api.Repositories.Contracts;
+using api.Helpers;
 using api.Models;
 using api.Models.Contracts;
+using api.Repositories.Contracts;
 using Microsoft.EntityFrameworkCore;
-using api.Helpers;
 
 namespace api.Repositories
 {
@@ -60,7 +55,7 @@ namespace api.Repositories
         {
             var model = await _context.Comments.FirstOrDefaultAsync(c => c.Id == id);
 
-            if(model == null)
+            if (model == null)
             {
                 return null;
             }
