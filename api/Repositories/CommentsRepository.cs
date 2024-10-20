@@ -8,6 +8,7 @@ using api.Repositories.Contracts;
 using api.Models;
 using api.Models.Contracts;
 using Microsoft.EntityFrameworkCore;
+using api.Helpers;
 
 namespace api.Repositories
 {
@@ -20,7 +21,7 @@ namespace api.Repositories
             _context = context;
         }
 
-        public async Task<List<IModel>> GetAllAsync()
+        public async Task<List<IModel>> GetAllAsync(QueryParameters? queryParameters)
         {
             return new List<IModel>(await _context.Comments.ToListAsync());
         }
