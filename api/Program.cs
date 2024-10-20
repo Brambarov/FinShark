@@ -19,8 +19,8 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     {
-        // options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-        options.UseSqlServer(builder.Configuration.GetConnectionString("AzureConnection"));
+        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+        //options.UseSqlServer(builder.Configuration.GetConnectionString("AzureConnection"));
     });
 
 builder.Services.AddScoped<IStocksRepository, StocksRepository>();
