@@ -16,9 +16,12 @@ namespace api.Repositories
             _context = context;
         }
 
-        public async Task<List<IModel>> GetAllAsync(QueryParameters? queryParameters)
+        public async Task<List<ModelBase>> GetAllAsync(QueryParameters? queryParameters)
         {
-            var stocks = _context.Stocks.Include(s => s.Comments).AsQueryable();
+            var stocks = _context.Stocks
+                .Include(s => s.Comments)
+                .ThenInclude(c => c.User)
+                .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(queryParameters?.Symbol))
             {
@@ -40,12 +43,24 @@ namespace api.Repositories
 
             var skipNumber = (queryParameters.PageNumber - 1) * queryParameters.PageSize;
 
-            return await stocks.Select(s => s as IModel).Skip(skipNumber).Take(queryParameters.PageSize).ToListAsync();
+            return await stocks
+                .Select(s => s as ModelBase)
+                .Skip(skipNumber)
+                .Take(queryParameters.PageSize)
+                .ToListAsync();
         }
 
-        public async Task<IModel?> GetByIdAsync(int id)
+        public async Task<ModelBase?> GetByIdAsync(int id)
         {
-            return await _context.Stocks.Include(s => s.Comments).FirstOrDefaultAsync(s => s.Id == id);
+            return await _context.Stocks
+                .Include(s => s.Comments)
+                .ThenInclude(c => c.User)
+                .FirstOrDefaultAsync(s => s.Id == id);
+        }
+
+        public async Task<Stock?> GetBySymbolAsync(string symbol)
+        {
+            return await _context.Stocks.FirstOrDefaultAsync(s => s.Symbol == symbol);
         }
 
         public async Task<Stock> CreateAsync(Stock model)
@@ -77,7 +92,7 @@ namespace api.Repositories
             return existingModel;
         }
 
-        public async Task<IModel?> DeleteAsync(int id)
+        public async Task<ModelBase?> DeleteAsync(int id)
         {
             var model = await _context.Stocks.FirstOrDefaultAsync(x => x.Id == id);
 

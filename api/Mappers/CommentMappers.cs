@@ -13,7 +13,8 @@ namespace api.Mappers
                 Title = model.Title,
                 Content = model.Content,
                 CreatedOn = model.CreatedOn,
-                StockId = model.StockId
+                StockId = model.StockId,
+                Author = model.User.UserName
             };
         }
 

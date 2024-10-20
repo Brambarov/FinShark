@@ -16,14 +16,14 @@ namespace api.Repositories
             _context = context;
         }
 
-        public async Task<List<IModel>> GetAllAsync(QueryParameters? queryParameters)
+        public async Task<List<ModelBase>> GetAllAsync(QueryParameters? queryParameters)
         {
-            return new List<IModel>(await _context.Comments.ToListAsync());
+            return new List<ModelBase>(await _context.Comments.Include(c => c.User).ToListAsync());
         }
 
-        public async Task<IModel?> GetByIdAsync(int id)
+        public async Task<ModelBase?> GetByIdAsync(int id)
         {
-            return await _context.Comments.FindAsync(id);
+            return await _context.Comments.Include(c => c.User).FirstOrDefaultAsync(c => c.Id == id);
         }
 
         public async Task<Comment> CreateAsync(Comment model)
@@ -51,7 +51,7 @@ namespace api.Repositories
             return existingModel;
         }
 
-        public async Task<IModel?> DeleteAsync(int id)
+        public async Task<ModelBase?> DeleteAsync(int id)
         {
             var model = await _context.Comments.FirstOrDefaultAsync(c => c.Id == id);
 

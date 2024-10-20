@@ -30,7 +30,9 @@ namespace api.Controllers
 
             var models = (await _stockRepository.GetAllAsync(queryParameters)).Select(m => m as Stock);
 
-            var DTOs = models.Select(s => s?.ToGetDTO());
+            var DTOs = models
+                .Select(s => s.ToGetDTO())
+                .ToList();
 
             return Ok(DTOs);
         }

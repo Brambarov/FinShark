@@ -3,7 +3,7 @@ using api.Models;
 
 namespace api.Mappers
 {
-    public static class StockMappers
+    public static class StocksMapper
     {
         public static GetStockDTO ToGetDTO(this Stock model)
         {

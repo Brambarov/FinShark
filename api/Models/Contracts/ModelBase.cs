@@ -1,6 +1,6 @@
 namespace api.Models.Contracts
 {
-    public interface IModel
+    public abstract class ModelBase
     {
         public int Id { get; set; }
     }
